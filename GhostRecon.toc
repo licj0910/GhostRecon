@@ -1,0 +1,22 @@
+## Title: Ghost: Recon
+## Title-zhCN: |cff00fe00Ghost: Recon|r
+## Notes: Mob Crowd Control & Ability Tracker
+## Notes-zhCN: |cff00fe00怪群控制 & 技能追踪|r
+## Author: Footrot / Sargeant / Freidv20
+
+## Interface: 110002
+## Version: 1.4.1
+## SavedVariables: GhostReconDB
+
+## OptionalDeps: LibDataBroker-1.1
+## IconTexture: Interface\AddOns\GhostRecon\Recon
+
+Localization.lua
+
+Core.lua
+Database.lua
+Tooltip.lua
+AbilityBar.lua
+Config.lua
+Comms.lua
+Search.lua
