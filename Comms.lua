@@ -186,35 +186,38 @@ function GhostRecon:SendVersion()
 end
 
 local function ReceiveControlNotification(sender, mobGuid, mobName, spellId, spellName, zone, success, inInstance)
-	spellId = tonumber(spellId)
-	success = tonumber(success)
-	inInstance = tonumber(inInstance)
+    spellId = tonumber(spellId)
+    success = tonumber(success)
+    inInstance = tonumber(inInstance)
 
-	if inInstance == 1 then
-		GhostReconDB.Instances[zone] = GhostReconDB.Instances[zone] or { }
-		GhostReconDB.Instances[zone].isInstance = true
-	end
+    if inInstance == 1 then
+        GhostReconDB.Instances[zone] = GhostReconDB.Instances[zone] or {}
+        GhostReconDB.Instances[zone].isInstance = true
+    end
 
-	if success == 0 then
-		success = nil
-	else
-		success = true
-	end
+    if success == 0 then
+        success = nil
+    else
+        success = true
+    end
 
-	if inInstance == 1 or not GhostReconDB.Settings.InstancesOnly then
-		if GhostRecon:AddControl(zone, mobGuid, mobName, spellId, success) then
-			local link = C_Spell.GetSpellLink(spellId)
+    if inInstance == 1 or not GhostReconDB.Settings.InstancesOnly then
+        if GhostRecon:AddControl(zone, mobGuid, mobName, spellId, success) then
+            if spellId then
+                local link = C_Spell.GetSpellLink(spellId)
+                if link then
+                    if success then
+                        GhostRecon:TellUser(string.format(L["Received control information: %s works on %s (%s).  Sent by %s."], link, mobName, zone, sender), 0.3, 1, 0.3)
+                    else
+                        GhostRecon:TellUser(string.format(L["Received control information: %s fails on %s (%s).  Sent by %s."], link, mobName, zone, sender), 1, 0.3, 0.3)
+                    end
+                end
+            end
 
-			if link then
-				if success then
-					GhostRecon:TellUser(string.format(L["Received control information: %s works on %s (%s).  Sent by %s."], link, mobName, zone, sender), 0.3, 1, 0.3)
-				else
-					GhostRecon:TellUser(string.format(L["Received control information: %s fails on %s (%s).  Sent by %s."], link, mobName, zone, sender), 1, 0.3, 0.3)
-				end
-			end
-		end
-	end
+        end
+    end
 end
+
 
 local function ReceiveAbilityNotification(sender, mobGuid, mobName, spellId, spellName, zone, inInstance)
 	spellId = tonumber(spellId)
@@ -275,61 +278,68 @@ local function ReceiveQueryResponse(sender, mobGuid, mobName, zone, spellCount)
 end
 
 local function ReceiveSpellInfoNotification(sender, spellId, spellName, zone, removable, inInstance)
-	if spellId ~= nil and spellName ~= nil then
-		spellId = tonumber(spellId)
-		inInstance = tonumber(inInstance)
-		removable = tonumber(removable)
+    if spellId ~= nil and spellName ~= nil then
+        spellId = tonumber(spellId)
+        inInstance = tonumber(inInstance)
+        removable = tonumber(removable)
+        if spellId then
 
-		local link = C_Spell.GetSpellLink(spellId)
+            local link = C_Spell.GetSpellLink(spellId)
 
-		if link then
-			GhostReconDB.SpellInfo = GhostReconDB.SpellInfo or { }
-			GhostReconDB.SpellInfo[spellId] = GhostReconDB.SpellInfo[spellId] or { }
+            if link then
+                GhostReconDB.SpellInfo = GhostReconDB.SpellInfo or {}
+                GhostReconDB.SpellInfo[spellId] = GhostReconDB.SpellInfo[spellId] or {}
 
-			if not GhostReconDB.SpellInfo[spellId].removable then
-				GhostRecon:TellUser(string.format(L["Received spell information: %s is removable.  Sent by %s."], link, sender), 0.3, 1, 0.3)
-			end
+                if not GhostReconDB.SpellInfo[spellId].removable then
+                    GhostRecon:TellUser(string.format(L["Received spell information: %s is removable.  Sent by %s."], link, sender), 0.3, 1, 0.3)
+                end
 
-			if removable == 1 then
-				GhostReconDB.SpellInfo[spellId].removable = true
-			else
-				GhostReconDB.SpellInfo[spellId].removable = false
-			end
-		end
-	end
+                if removable == 1 then
+                    GhostReconDB.SpellInfo[spellId].removable = true
+                else
+                    GhostReconDB.SpellInfo[spellId].removable = false
+                end
+            end
+        end
+
+    end
 end
+
 
 local function ReceiveHealInfoNotification(sender, spellId, spellName, zone, healType, inInstance)
-	if spellId ~= nil and spellName ~= nil then
-		spellId = tonumber(spellId)
-		inInstance = tonumber(inInstance)
-		healType = tonumber(healType)
+    if spellId ~= nil and spellName ~= nil then
+        spellId = tonumber(spellId)
+        inInstance = tonumber(inInstance)
+        healType = tonumber(healType)
+        if spellId then
 
-		local link = C_Spell.GetSpellLink(spellId)
+            local link = C_Spell.GetSpellLink(spellId)
 
-		if link then
-			GhostReconDB.SpellInfo = GhostReconDB.SpellInfo or { }
-			GhostReconDB.SpellInfo[spellId] = GhostReconDB.SpellInfo[spellId] or { }
+            if link then
+                GhostReconDB.SpellInfo = GhostReconDB.SpellInfo or {}
+                GhostReconDB.SpellInfo[spellId] = GhostReconDB.SpellInfo[spellId] or {}
 
-			if GhostReconDB.SpellInfo[spellId].healType == nil then
-				if healType == GhostRecon.CONST_HEAL_SELF then
-					GhostRecon:TellUser(string.format(L["Received heal information: %s is a self-healing spell.  Sent by %s."], link, sender), 0.3, 1, 0.3)
+                if GhostReconDB.SpellInfo[spellId].healType == nil then
+                    if healType == GhostRecon.CONST_HEAL_SELF then
+                        GhostRecon:TellUser(string.format(L["Received heal information: %s is a self-healing spell.  Sent by %s."], link, sender), 0.3, 1, 0.3)
 
-				elseif healType == GhostRecon.CONST_HEAL_OTHERS then
-					GhostRecon:TellUser(string.format(L["Received heal information: %s is a general healing spell.  Sent by %s."], link, sender), 0.3, 1, 0.3)
-				end
+                    elseif healType == GhostRecon.CONST_HEAL_OTHERS then
+                        GhostRecon:TellUser(string.format(L["Received heal information: %s is a general healing spell.  Sent by %s."], link, sender), 0.3, 1, 0.3)
+                    end
 
-				GhostReconDB.SpellInfo[spellId].healType = healType
+                    GhostReconDB.SpellInfo[spellId].healType = healType
 
-			elseif GhostReconDB.SpellInfo[spellId].healType == GhostRecon.CONST_HEAL_SELF then
-				if healType == GhostRecon.CONST_HEAL_OTHERS then
-					GhostReconDB.SpellInfo[spellId].healType = GhostRecon.CONST_HEAL_OTHERS
-					GhostRecon:TellUser(string.format(L["Received heal information: %s is a general healing spell.  Sent by %s."], link, sender), 0.3, 1, 0.3)
-				end
-			end
-		end
-	end
+                elseif GhostReconDB.SpellInfo[spellId].healType == GhostRecon.CONST_HEAL_SELF then
+                    if healType == GhostRecon.CONST_HEAL_OTHERS then
+                        GhostReconDB.SpellInfo[spellId].healType = GhostRecon.CONST_HEAL_OTHERS
+                        GhostRecon:TellUser(string.format(L["Received heal information: %s is a general healing spell.  Sent by %s."], link, sender), 0.3, 1, 0.3)
+                    end
+                end
+            end
+        end
+    end
 end
+
 
 local function ReceiveSendRequest(sender, whoShouldSend, mobGuid, mobName, zone)
 	if whoShouldSend == UnitName("player") then
@@ -348,7 +358,7 @@ local function ReceiveSendRequest(sender, whoShouldSend, mobGuid, mobName, zone)
 				break
 			end
 
-			if value ~= nil and chosenSpellId ~= nil then
+			if value ~= nil and chosenSpellId ~= nil and spellName~= nil then
 				spellName = GetSpellInfo(chosenSpellId)
 
 				if value == GhostRecon.CC_NO then

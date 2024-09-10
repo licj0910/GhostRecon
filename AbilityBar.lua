@@ -79,7 +79,7 @@ local function CreateSpellFrame(spellId, parent)
 		GameTooltip:FadeOut()
 	end)
 
-	function rc:SetSize(value)
+	function rc:GrSetSize(value)
 		rc:SetWidth(value)
 		rc:SetHeight(value)
 	end
@@ -106,7 +106,7 @@ local function CreateSpellFrame(spellId, parent)
 		end
 	end
 
-	rc:SetSize((GhostReconDB.Settings.Scale or 1) * 32)
+	rc:GrSetSize((GhostReconDB.Settings.Scale or 1) * 32)
 
 	rc.FrameRepresentsSpell = function(this, spellId)
 		local retCode
@@ -146,7 +146,7 @@ local function CreateSpellBar()
 
 			v:SetPoint("TOPLEFT", rc, "TOPLEFT", curX, -curY)
 			v.spellImage:SetAllPoints(v)
-			v:SetSize((GhostReconDB.Settings.Scale or 1) * 32)
+			v:GrSetSize((GhostReconDB.Settings.Scale or 1) * 32)
 			v:Show()
 
 			curCol = curCol + 1

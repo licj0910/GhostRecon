@@ -186,7 +186,7 @@ local function CreateSpellFrame(spellId, parent)
 		GameTooltip:FadeOut()
 	end)
 
-	function rc:SetSize(value)
+	function rc:GrSetSize(value)
 		rc:SetWidth(value)
 		rc:SetHeight(value)
 	end
@@ -213,7 +213,7 @@ local function CreateSpellFrame(spellId, parent)
 		end
 	end
 
-	rc:SetSize(CONST_SIZE)
+	rc:GrSetSize(CONST_SIZE)
 
 
 	rc.FrameRepresentsSpell = function(this, spellId)
@@ -256,7 +256,7 @@ local function CreateSpellBar()
 
 			v:SetPoint("TOPLEFT", rc, "TOPLEFT", curX, -curY)
 			v.spellImage:SetAllPoints(v)
-			v:SetSize(CONST_SIZE)
+			v:GrSetSize(CONST_SIZE)
 			v:Show()
 
 			curCol = curCol + 1
@@ -341,6 +341,8 @@ local function SpellsForMob(mobGuid, mobName, zone)
 		table.sort(t, function(a, b)
 			if a.name < b.name then
 				return true
+			else
+				return false
 			end
 		end)
 	end
@@ -548,7 +550,7 @@ frm.Zone:SetScript("OnTextChanged", function()
 	end
 
 	if count == 1 then
-		frm.Zone:SetText(current)
+		if current then frm.Zone:SetText(current) end
 		SetMobHistory()
 	end
 
@@ -605,7 +607,7 @@ frm.Mob:SetScript("OnTextChanged", function()
 		end
 
 		if count == 1 then
-			frm.Mob:SetText(current)
+			if current then frm.Mob:SetText(current) end
 		end
 	end
 
