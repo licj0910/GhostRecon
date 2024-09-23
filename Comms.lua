@@ -358,8 +358,9 @@ local function ReceiveSendRequest(sender, whoShouldSend, mobGuid, mobName, zone)
 				break
 			end
 
-			if value ~= nil and chosenSpellId ~= nil and spellName~= nil then
-				spellName = GetSpellInfo(chosenSpellId)
+			if value ~= nil and chosenSpellId ~= nil then
+				local name = GetSpellInfo(chosenSpellId)
+				if name then spellName = name end
 
 				if value == GhostRecon.CC_NO then
 					GhostRecon:SendNotification("CONTROL", mobGuid, mobName, chosenSpellId, spellName, zone, false, whereInfo.isInstance or false)
