@@ -112,11 +112,11 @@ end
 function GhostRecon:SendNotification(notifyType, mobGuid, mobName, spellId, spellName, zone, success, inInstance)
 	if IsInGuild() and GhostRecon.useComms and GhostReconDB.Settings.GuildSync then
 		if notifyType ~= nil and
-		   mobGuid ~= nil and
-		   mobName ~= nil and
-		   spellId ~= nil and
-		   spellName ~= nil and
-		   zone ~= nil then
+			mobGuid ~= nil and
+			mobName ~= nil and
+			spellId ~= nil and
+			spellName ~= nil and
+			zone ~= nil then
 
 			local msg
 

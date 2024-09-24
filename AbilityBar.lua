@@ -5,19 +5,12 @@ GhostRecon.CONST_PADDING = 1
 
 local nextId = 1
 
+
 local masterSpellFrame = nil
 local nextRefreshTime = nil
 local inCombat = false
 
 local mobsInCombat = {}
-
-local function SaveSkin(arg, SkinID, Gloss, Backdrop, Group, Button, Colors)
-	GhostReconDB.SkinSettings = GhostReconDB.SkinSettings or {}
-	GhostReconDB.SkinSettings.SkinID = SkinID
-	GhostReconDB.SkinSettings.Gloss = Gloss
-	GhostReconDB.SkinSettings.Backdrop = Backdrop
-	GhostReconDB.SkinSettings.Colors = Colors
-end
 
 local function GetSpellInfo(spellID)
 	if not spellID then
@@ -326,32 +319,38 @@ local function SpellsForMob(unitId)
 end
 
 local function UpdateSpellBar(spells)
-	masterSpellFrame:SetSpells(spells)
+    if masterSpellFrame then
+        masterSpellFrame:SetSpells(spells)
 
-	if GhostReconDB.Settings.AbilitiesBarEnabled then
-		masterSpellFrame:Show()
-		masterSpellFrame:SetAlpha(masterSpellFrame.preferredAlpha or GhostReconDB.Settings.OutOfCombatAlpha or 1)
-	end
+        if GhostReconDB.Settings.AbilitiesBarEnabled then
+            masterSpellFrame:Show()
+            masterSpellFrame:SetAlpha(masterSpellFrame.preferredAlpha or GhostReconDB.Settings.OutOfCombatAlpha or 1)
+        end
+    end
 end
 
 function GhostRecon:RefreshSpells(unitId)
-	local spells = SpellsForMob(unitId)
+    local spells = SpellsForMob(unitId)
 
-	UpdateSpellBar(spells)
+    UpdateSpellBar(spells)
 
-	-- stop existing effects
-	masterSpellFrame:StopCooldowns()
+    -- stop existing effects
+    if masterSpellFrame then
+        masterSpellFrame:StopCooldowns()
+    end
 
-	-- now, reset all the cooldowns in progress for the mob the bar is showing
-	local spellInfo = mobsInCombat[masterSpellFrame.mobGuid]
+    -- now, reset all the cooldowns in progress for the mob the bar is showing
+    local spellInfo = mobsInCombat[masterSpellFrame.mobGuid]
 
-	if spellInfo then
-		for i, v in pairs(spellInfo) do
-			if v.radarType == "COOLDOWN" then
-				masterSpellFrame:SetCooldown(v.spellId, v.startTime, v.duration, 1)
-			end
-		end
-	end
+    if spellInfo then
+        for i, v in pairs(spellInfo) do
+            if v.radarType == "COOLDOWN" then
+                if masterSpellFrame then
+                    masterSpellFrame:SetCooldown(v.spellId, v.startTime, v.duration, 1)
+                end
+            end
+        end
+    end
 end
 
 local function BarUnitChanged()

@@ -10,7 +10,6 @@ local frm = CreateFrame("Frame", "GhostReconBrowser", UIParent)
 local mouseOverMob
 local nextId = 1
 
-
 local function GetSpellInfo(spellID)
 	if not spellID then
 		return nil;
@@ -215,7 +214,6 @@ local function CreateSpellFrame(spellId, parent)
 
 	rc:GrSetSize(CONST_SIZE)
 
-
 	rc.FrameRepresentsSpell = function(this, spellId)
 		local retCode
 
@@ -266,7 +264,6 @@ local function CreateSpellBar()
 				curRow = curRow + 1
 			end
 		end
-
 
 		local maxCols = math.min(this.spellCount, CONST_COLUMNS)
 		local maxRows = math.floor(this.spellCount / maxCols)
@@ -376,7 +373,7 @@ local function InputValid()
 	return rc
 end
 
-local function UpdateTooltip()
+local function UpdateTooltip(this)
 	if InputValid() then
 		if mouseOverMob then
 			GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -531,17 +528,13 @@ frm.Zone:SetScript("OnTextChanged", function()
 	local current = nil
 	local count = 0
 
-
 --	frm.Mob:SetText("")
-
 	for _, v in pairs(zones) do
 		local curZone = v
-
 
 		-- match it up with what we typed
 		local l = math.min(string.len(curText), string.len(curZone))
 		local comp = string.sub(curText, 1, l)
-
 
 		if string.lower(comp) == string.lower(string.sub(curZone, 1, l)) then
 			current = v
@@ -556,6 +549,7 @@ frm.Zone:SetScript("OnTextChanged", function()
 
 	InfoVisible(InputValid())
 end)
+
 frm.Zone:SetScript("OnTabPressed", function()
 	frm.Mob:SetFocus()
 	frm.Mob:HighlightText()
@@ -590,15 +584,12 @@ frm.Mob:SetScript("OnTextChanged", function()
 		local current = nil
 		local count = 0
 
-
 		for _, v in pairs(mobs) do
 			local curMob = v
-
 
 			-- match it up with what we typed
 			local l = math.min(string.len(curText), string.len(curMob))
 			local comp = string.sub(curText, 1, l)
-
 
 			if string.lower(comp) == string.lower(string.sub(curMob, 1, l)) then
 				current = v
@@ -613,7 +604,6 @@ frm.Mob:SetScript("OnTextChanged", function()
 
 	if InputValid() then
 		local spells = SpellsForMob("", frm.Mob:GetText(), frm.Zone:GetText())
-
 
 		frm.spellFrame:SetSpells(spells)
 		frm.Notes:SetText(GhostRecon:GetNotes(frm.Zone:GetText(), "", frm.Mob:GetText()))
@@ -729,7 +719,6 @@ StaticPopupDialogs["GhostReconWhisper"] = {
 	hasEditBox = 1,
 	OnAccept = function(self)
 		local who = getglobal(self:GetName().."EditBox"):GetText()
-
 
 		if who ~= nil and string.len(who) > 0 then
 			ReportCurrentMob(who)
