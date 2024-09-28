@@ -48,3 +48,12 @@ The Settings.RegisterProxySetting function has been adjusted and can now be call
 The Settings.OpenToCategory function has been improved and now supports directly opening to a subcategory, as well as automatically expanding any categories that it opens.
 
 https://bbs.nga.cn/read.php?&tid=34246233
+
+5.出处、发布修改历史
+https://www.wowinterface.com/downloads/info11869-GhostRecon.html
+https://www.wowinterface.com/downloads/info18957-GhostReconContinued.html
+https://www.wowinterface.com/downloads/info24744-GhostReconBFA.html
+https://bbs.nga.cn/read.php?tid=10057098&forder_by=postdatedesc&page=4
+https://bbs.nga.cn/read.php?tid=34053506&fav=:F05349FF5
+https://bbs.nga.cn/read.php?tid=34246233
+
