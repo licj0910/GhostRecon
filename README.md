@@ -35,7 +35,6 @@ GhostReconDB = {
 
 
 3.插件下载
-GhostRecon-20240819-简繁英、缩进排版.zip
 https://img.nga.178.com/attachments/mon_202408/20/5kQ2u-jursK14.zip?filename=GhostRecon%2d20240819%2d%E7%AE%80%E7%B9%81%E8%8B%B1%E3%80%81%E7%BC%A9%E8%BF%9B%E6%8E%92%E7%89%88%2ezip
 
 4.当前遗留问题
