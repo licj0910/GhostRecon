@@ -4,7 +4,7 @@
 ## Notes-zhCN: |cff00fe00怪群控制 & 技能追踪|r
 ## Author: Footrot / Sargeant / Freidv20
 
-## Interface: 110002
+## Interface: 110105, 110100
 ## Version: 1.4.1
 ## SavedVariables: GhostReconDB
 
