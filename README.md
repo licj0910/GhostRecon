@@ -38,13 +38,7 @@ GhostReconDB = {
 https://img.nga.178.com/attachments/mon_202408/20/5kQ2u-jursK14.zip?filename=GhostRecon%2d20240819%2d%E7%AE%80%E7%B9%81%E8%8B%B1%E3%80%81%E7%BC%A9%E8%BF%9B%E6%8E%92%E7%89%88%2ezip
 
 4.当前遗留问题
-目前命令无法直接打开到具体设置界面，也不能自动展开。
-Settings API changes
-The Settings API has been updated to resolve a few usability issues with respect to the creation and management of settings.
-
-The Settings.RegisterAddOnSetting function has had its signature changed significantly and now requires two additional parameters (variableKey and variableTbl) in the middle of the parameter list. These are used to directly read and write settings from a supplied table, which is typically expected to be the addon's saved variables.
-The Settings.RegisterProxySetting function has been adjusted and can now be called from insecure code. Proxy settings can be used to execute author-supplied callbacks when reading and writing settings as an alternative to RegisterAddOnSetting.
-The Settings.OpenToCategory function has been improved and now supports directly opening to a subcategory, as well as automatically expanding any categories that it opens.
+小地图修复了左键，右键修复不成功。
 
 https://bbs.nga.cn/read.php?&tid=34246233
 

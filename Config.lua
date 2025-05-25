@@ -2,7 +2,6 @@ local ADDON_NAME, namespace = ...
 local L = namespace.L
 
 GhostReconDB.Settings = GhostReconDB.Settings or {}
-
 -- GUI draggable ability bar dummy
 local abilityDragBar = CreateFrame("Frame", nil, UIParent)
 abilityDragBar:SetClampedToScreen(true)
@@ -13,18 +12,20 @@ abilityDragBar:EnableMouse(true)
 abilityDragBar:SetMovable(true)
 abilityDragBar:RegisterForDrag("LeftButton")
 abilityDragBar:SetScript("OnDragStart", function(this)
-	this:StartMoving()
+  this:StartMoving()
 end)
 abilityDragBar:SetScript("OnDragStop", function(this)
-	this:StopMovingOrSizing()
-	GhostReconDB.Settings.Anchor, _, GhostReconDB.Settings.RelativeAnchor, GhostReconDB.Settings.X, GhostReconDB.Settings.Y = this:GetPoint()
-	GhostRecon.abilityBar:SetAllPoints(this)
+  this:StopMovingOrSizing()
+  GhostReconDB.Settings.Anchor, _, GhostReconDB.Settings.RelativeAnchor, GhostReconDB.Settings.X, GhostReconDB.Settings.Y = this:GetPoint()
+  GhostRecon.abilityBar:SetAllPoints(this)
 end)
 abilityDragBar:SetScript("OnMouseDown", function(self, button)
-	if button == "RightButton" then GRAbilityDragBarToggle() end
+  if button == "RightButton" then
+    GRAbilityDragBarToggle()
+  end
 end)
 abilityDragBar:SetScript("OnMouseWheel", function(self, delta)
-	GRScaleChange(delta)
+  GRScaleChange(delta)
 end)
 
 -- the frame itself
@@ -34,87 +35,87 @@ optionsFrame:SetWidth(350)
 optionsFrame:SetHeight(400)
 
 optionsFrame.okay = function()
-	GhostReconDB.Settings.TooltipEnabled = optionsFrame.Tooltip:GetChecked()
-	GhostReconDB.Settings.TooltipSpellsEnabled = optionsFrame.TooltipSpells:GetChecked() or false
-	GhostReconDB.Settings.TooltipIconsEnabled = optionsFrame.TooltipIcons:GetChecked() or false
-	GhostReconDB.Settings.AbilitiesBarEnabled = optionsFrame.AbilitiesBar:GetChecked()
-	GhostReconDB.Settings.BarUnit = optionsFrame.BarUnit:GetText()
-	GhostReconDB.Settings.GuildSync = optionsFrame.Sync:GetChecked() or false
-	GhostReconDB.Settings.ShowMessages = optionsFrame.Messages:GetChecked()
-	GhostReconDB.Settings.InstancesOnly = optionsFrame.InstancesOnly:GetChecked()
-	GhostReconDB.Settings.Scale = optionsFrame.Scale:GetValue() or 1
-	GhostReconDB.Settings.Columns = optionsFrame.Columns:GetValue()
-	GhostReconDB.Settings.OutOfCombatAlpha = optionsFrame.OutOfCombatAlpha:GetValue()
-	GhostReconDB.Settings.InCombatAlpha = optionsFrame.InCombatAlpha:GetValue()
+  GhostReconDB.Settings.TooltipEnabled = optionsFrame.Tooltip:GetChecked()
+  GhostReconDB.Settings.TooltipSpellsEnabled = optionsFrame.TooltipSpells:GetChecked() or false
+  GhostReconDB.Settings.TooltipIconsEnabled = optionsFrame.TooltipIcons:GetChecked() or false
+  GhostReconDB.Settings.AbilitiesBarEnabled = optionsFrame.AbilitiesBar:GetChecked()
+  GhostReconDB.Settings.BarUnit = optionsFrame.BarUnit:GetText()
+  GhostReconDB.Settings.GuildSync = optionsFrame.Sync:GetChecked() or false
+  GhostReconDB.Settings.ShowMessages = optionsFrame.Messages:GetChecked()
+  GhostReconDB.Settings.InstancesOnly = optionsFrame.InstancesOnly:GetChecked()
+  GhostReconDB.Settings.Scale = optionsFrame.Scale:GetValue() or 1
+  GhostReconDB.Settings.Columns = optionsFrame.Columns:GetValue()
+  GhostReconDB.Settings.OutOfCombatAlpha = optionsFrame.OutOfCombatAlpha:GetValue()
+  GhostReconDB.Settings.InCombatAlpha = optionsFrame.InCombatAlpha:GetValue()
 
-	GhostRecon:RefreshBar()
+  GhostRecon:RefreshBar()
 end
 
 -- function to sync the frame with the settings
 local function ShowCurrentSettings()
-	optionsFrame.Tooltip:SetChecked(GhostReconDB.Settings.TooltipEnabled)
-	optionsFrame.TooltipSpells:SetChecked(GhostReconDB.Settings.TooltipSpellsEnabled)
-	optionsFrame.TooltipIcons:SetChecked(GhostReconDB.Settings.TooltipIconsEnabled)
-	optionsFrame.AbilitiesBar:SetChecked(GhostReconDB.Settings.AbilitiesBarEnabled)
-	optionsFrame.BarUnit:SetText(GhostReconDB.Settings.BarUnit or "target")
+  optionsFrame.Tooltip:SetChecked(GhostReconDB.Settings.TooltipEnabled)
+  optionsFrame.TooltipSpells:SetChecked(GhostReconDB.Settings.TooltipSpellsEnabled)
+  optionsFrame.TooltipIcons:SetChecked(GhostReconDB.Settings.TooltipIconsEnabled)
+  optionsFrame.AbilitiesBar:SetChecked(GhostReconDB.Settings.AbilitiesBarEnabled)
+  optionsFrame.BarUnit:SetText(GhostReconDB.Settings.BarUnit or "target")
 
-	optionsFrame.Scale:SetValue(GhostReconDB.Settings.Scale or 1)
-	optionsFrame.ScaleLabel:SetText(L["Bar Scale: "] .. GhostReconDB.Settings.Scale)
+  optionsFrame.Scale:SetValue(GhostReconDB.Settings.Scale or 1)
+  optionsFrame.ScaleLabel:SetText(L["Bar Scale: "] .. GhostReconDB.Settings.Scale)
 
-	optionsFrame.Sync:SetChecked(GhostReconDB.Settings.GuildSync)
-	optionsFrame.Messages:SetChecked(GhostReconDB.Settings.ShowMessages)
-	optionsFrame.InstancesOnly:SetChecked(GhostReconDB.Settings.InstancesOnly)
+  optionsFrame.Sync:SetChecked(GhostReconDB.Settings.GuildSync)
+  optionsFrame.Messages:SetChecked(GhostReconDB.Settings.ShowMessages)
+  optionsFrame.InstancesOnly:SetChecked(GhostReconDB.Settings.InstancesOnly)
 
-	optionsFrame.Columns:SetValue(GhostReconDB.Settings.Columns or 18)
-	optionsFrame.ColumnsLabel:SetText(L["Columns: "] .. optionsFrame.Columns:GetValue())
+  optionsFrame.Columns:SetValue(GhostReconDB.Settings.Columns or 18)
+  optionsFrame.ColumnsLabel:SetText(L["Columns: "] .. optionsFrame.Columns:GetValue())
 
-	optionsFrame.OutOfCombatAlpha:SetValue(GhostReconDB.Settings.OutOfCombatAlpha or 1)
-	optionsFrame.OutOfCombatAlphaLabel:SetText(string.format(L["Out of Combat Alpha: %d%%"], optionsFrame.OutOfCombatAlpha:GetValue() * 100))
+  optionsFrame.OutOfCombatAlpha:SetValue(GhostReconDB.Settings.OutOfCombatAlpha or 1)
+  optionsFrame.OutOfCombatAlphaLabel:SetText(string.format(L["Out of Combat Alpha: %d%%"], optionsFrame.OutOfCombatAlpha:GetValue() * 100))
 
-	optionsFrame.InCombatAlpha:SetValue(GhostReconDB.Settings.InCombatAlpha or 1)
-	optionsFrame.InCombatAlphaLabel:SetText(string.format(L["In-Combat Alpha: %d%%"], optionsFrame.InCombatAlpha:GetValue() * 100))
+  optionsFrame.InCombatAlpha:SetValue(GhostReconDB.Settings.InCombatAlpha or 1)
+  optionsFrame.InCombatAlphaLabel:SetText(string.format(L["In-Combat Alpha: %d%%"], optionsFrame.InCombatAlpha:GetValue() * 100))
 
-	if optionsFrame.Tooltip:GetChecked() then
-		optionsFrame.TooltipSpells:Enable()
-	else
-		optionsFrame.TooltipSpells:Disable()
-	end
+  if optionsFrame.Tooltip:GetChecked() then
+    optionsFrame.TooltipSpells:Enable()
+  else
+    optionsFrame.TooltipSpells:Disable()
+  end
 end
 
 optionsFrame.cancel = function()
-	ShowCurrentSettings()
-	GhostRecon:RefreshBar()
+  ShowCurrentSettings()
+  GhostRecon:RefreshBar()
 end
 
 optionsFrame.default = function()
-	GhostReconDB.Settings.BarUnit = "target"
-	GhostReconDB.Settings.Scale = 1
-	GhostReconDB.Settings.TooltipEnabled = true
-	GhostReconDB.Settings.TooltipSpellsEnabled = true
-	GhostReconDB.Settings.TooltipIconsEnabled = true
-	GhostReconDB.Settings.AbilitiesBarEnabled = true
-	GhostReconDB.Settings.Anchor, GhostReconDB.Settings.RelativeAnchor = "CENTER", "CENTER"
-	GhostReconDB.Settings.X, GhostReconDB.Settings.Y = 0, 0
-	GhostReconDB.Settings.GuildSync = true
-	GhostReconDB.Settings.ShowMessages = nil
-	GhostReconDB.Settings.InstancesOnly = nil
-	GhostReconDB.Settings.Columns = 12
-	GhostReconDB.Settings.OutOfCombatAlpha = 1
-	GhostReconDB.Settings.InCombatAlpha = 1
+  GhostReconDB.Settings.BarUnit = "target"
+  GhostReconDB.Settings.Scale = 1
+  GhostReconDB.Settings.TooltipEnabled = true
+  GhostReconDB.Settings.TooltipSpellsEnabled = true
+  GhostReconDB.Settings.TooltipIconsEnabled = true
+  GhostReconDB.Settings.AbilitiesBarEnabled = true
+  GhostReconDB.Settings.Anchor, GhostReconDB.Settings.RelativeAnchor = "CENTER", "CENTER"
+  GhostReconDB.Settings.X, GhostReconDB.Settings.Y = 0, 0
+  GhostReconDB.Settings.GuildSync = true
+  GhostReconDB.Settings.ShowMessages = nil
+  GhostReconDB.Settings.InstancesOnly = nil
+  GhostReconDB.Settings.Columns = 12
+  GhostReconDB.Settings.OutOfCombatAlpha = 1
+  GhostReconDB.Settings.InCombatAlpha = 1
 
-	ShowCurrentSettings()
-	GhostRecon:RefreshBar()
+  ShowCurrentSettings()
+  GhostRecon:RefreshBar()
 end
 
 -- temp redraw
 local function TemporaryRedraw()
-	local cols = optionsFrame.Columns:GetValue()
-	local rows = math.ceil(18 / cols)
+  local cols = optionsFrame.Columns:GetValue()
+  local rows = math.ceil(18 / cols)
 
-	abilityDragBar:SetWidth(cols * (optionsFrame.Scale:GetValue() * 32) + (cols - 1) * GhostRecon.CONST_PADDING)
-	abilityDragBar:SetHeight(rows * (optionsFrame.Scale:GetValue() * 32) + (rows - 1) * GhostRecon.CONST_PADDING)
+  abilityDragBar:SetWidth(cols * (optionsFrame.Scale:GetValue() * 32) + (cols - 1) * GhostRecon.CONST_PADDING)
+  abilityDragBar:SetHeight(rows * (optionsFrame.Scale:GetValue() * 32) + (rows - 1) * GhostRecon.CONST_PADDING)
 
-	GhostRecon.abilityBar:SetAllPoints(abilityDragBar)
+  GhostRecon.abilityBar:SetAllPoints(abilityDragBar)
 end
 
 -- title
@@ -131,11 +132,11 @@ optionsFrame.Tooltip:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", 10, -50)
 optionsFrame.Tooltip:SetWidth(24)
 optionsFrame.Tooltip:SetHeight(24)
 optionsFrame.Tooltip:SetScript("OnClick", function()
-	if optionsFrame.Tooltip:GetChecked() then
-		optionsFrame.TooltipSpells:Enable()
-	else
-		optionsFrame.TooltipSpells:Disable()
-	end
+  if optionsFrame.Tooltip:GetChecked() then
+    optionsFrame.TooltipSpells:Enable()
+  else
+    optionsFrame.TooltipSpells:Disable()
+  end
 end)
 
 -- tooltip label
@@ -181,9 +182,9 @@ optionsFrame.AbilitiesBar:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", 232, -75)
 optionsFrame.AbilitiesBar:SetWidth(24)
 optionsFrame.AbilitiesBar:SetHeight(24)
 optionsFrame.AbilitiesBar:SetScript("OnClick", function()
-	if not optionsFrame.AbilitiesBar:GetChecked() then
-		GhostRecon.abilityBar:Hide()
-	end
+  if not optionsFrame.AbilitiesBar:GetChecked() then
+    GhostRecon.abilityBar:Hide()
+  end
 end)
 -- abilities label
 optionsFrame.AbilitiesBarLabel = optionsFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -220,20 +221,20 @@ optionsFrame.Scale:SetMinMaxValues(0.5, 3)
 optionsFrame.Scale:SetValueStep(0.01)
 optionsFrame.Scale:SetObeyStepOnDrag(true)
 optionsFrame.Scale:SetScript("OnValueChanged", function()
-	local tempval
-	tempval = math.ceil(math.floor(optionsFrame.Scale:GetValue() * 1000) / 10) / 100
-	optionsFrame.Scale:SetValue(tempval)
-	--	if optionsFrame:IsVisible() then
-	TemporaryRedraw()
-	optionsFrame.ScaleLabel:SetText(L["Bar Scale: "] .. tempval)
-	--	end
-	GhostReconDB.Settings.Scale = tempval or 1
-	GhostRecon:RefreshBar()
-	--	GhostRecon:RefreshSpells(GhostReconDB.Settings.BarUnit)
+  local tempval
+  tempval = math.ceil(math.floor(optionsFrame.Scale:GetValue() * 1000) / 10) / 100
+  optionsFrame.Scale:SetValue(tempval)
+  --	if optionsFrame:IsVisible() then
+  TemporaryRedraw()
+  optionsFrame.ScaleLabel:SetText(L["Bar Scale: "] .. tempval)
+  --	end
+  GhostReconDB.Settings.Scale = tempval or 1
+  GhostRecon:RefreshBar()
+  --	GhostRecon:RefreshSpells(GhostReconDB.Settings.BarUnit)
 end)
 
 optionsFrame.Scale:SetScript("OnMouseWheel", function(self, delta)
-	GRScaleChange(delta)
+  GRScaleChange(delta)
 end)
 
 -- scale label
@@ -254,20 +255,20 @@ optionsFrame.Columns:SetMinMaxValues(1, 18)
 optionsFrame.Columns:SetValueStep(1)
 optionsFrame.Columns:SetObeyStepOnDrag(true)
 optionsFrame.Columns:SetScript("OnValueChanged", function()
-	if optionsFrame:IsVisible() then
-		TemporaryRedraw()
-		optionsFrame.ColumnsLabel:SetText(L["Columns: "] .. optionsFrame.Columns:GetValue())
-	end
-	GhostReconDB.Settings.Columns = optionsFrame.Columns:GetValue()
-	GhostRecon:RefreshBar()
+  if optionsFrame:IsVisible() then
+    TemporaryRedraw()
+    optionsFrame.ColumnsLabel:SetText(L["Columns: "] .. optionsFrame.Columns:GetValue())
+  end
+  GhostReconDB.Settings.Columns = optionsFrame.Columns:GetValue()
+  GhostRecon:RefreshBar()
 end)
 optionsFrame.Columns:SetScript("OnMouseWheel", function(self, delta)
-	local current = optionsFrame.Columns:GetValue()
-	if (delta > 0) and (current < 18) then
-		optionsFrame.Columns:SetValue(current + 1)
-	elseif (delta < 0) and (current > 1) then
-		optionsFrame.Columns:SetValue(current - 1)
-	end
+  local current = optionsFrame.Columns:GetValue()
+  if (delta > 0) and (current < 18) then
+    optionsFrame.Columns:SetValue(current + 1)
+  elseif (delta < 0) and (current > 1) then
+    optionsFrame.Columns:SetValue(current - 1)
+  end
 end)
 
 -- columns label
@@ -288,19 +289,19 @@ optionsFrame.OutOfCombatAlpha:SetMinMaxValues(0, 1)
 optionsFrame.OutOfCombatAlpha:SetValueStep(0.01)
 optionsFrame.OutOfCombatAlpha:SetObeyStepOnDrag(true)
 optionsFrame.OutOfCombatAlpha:SetScript("OnValueChanged", function()
-	if optionsFrame:IsVisible() then
-		optionsFrame.OutOfCombatAlphaLabel:SetText(string.format(L["Out of Combat Alpha: %d%%"], optionsFrame.OutOfCombatAlpha:GetValue() * 100))
-	end
-	GhostReconDB.Settings.OutOfCombatAlpha = optionsFrame.OutOfCombatAlpha:GetValue()
-	GhostRecon:RefreshSpells(GhostReconDB.Settings.BarUnit)
+  if optionsFrame:IsVisible() then
+    optionsFrame.OutOfCombatAlphaLabel:SetText(string.format(L["Out of Combat Alpha: %d%%"], optionsFrame.OutOfCombatAlpha:GetValue() * 100))
+  end
+  GhostReconDB.Settings.OutOfCombatAlpha = optionsFrame.OutOfCombatAlpha:GetValue()
+  GhostRecon:RefreshSpells(GhostReconDB.Settings.BarUnit)
 end)
 optionsFrame.OutOfCombatAlpha:SetScript("OnMouseWheel", function(self, delta)
-	local current = optionsFrame.OutOfCombatAlpha:GetValue()
-	if (delta > 0) and (current < 1) then
-		optionsFrame.OutOfCombatAlpha:SetValue(current + 0.01)
-	elseif (delta < 0) and (current > 0) then
-		optionsFrame.OutOfCombatAlpha:SetValue(current - 0.01)
-	end
+  local current = optionsFrame.OutOfCombatAlpha:GetValue()
+  if (delta > 0) and (current < 1) then
+    optionsFrame.OutOfCombatAlpha:SetValue(current + 0.01)
+  elseif (delta < 0) and (current > 0) then
+    optionsFrame.OutOfCombatAlpha:SetValue(current - 0.01)
+  end
 end)
 
 -- 'out of combat alpha' label
@@ -321,19 +322,19 @@ optionsFrame.InCombatAlpha:SetMinMaxValues(0, 1)
 optionsFrame.InCombatAlpha:SetValueStep(0.01)
 optionsFrame.InCombatAlpha:SetObeyStepOnDrag(true)
 optionsFrame.InCombatAlpha:SetScript("OnValueChanged", function()
-	if optionsFrame:IsVisible() then
-		optionsFrame.InCombatAlphaLabel:SetText(string.format(L["In-Combat Alpha: %d%%"], optionsFrame.InCombatAlpha:GetValue() * 100))
-	end
-	GhostReconDB.Settings.InCombatAlpha = optionsFrame.InCombatAlpha:GetValue()
-	GhostRecon:RefreshSpells(GhostReconDB.Settings.BarUnit)
+  if optionsFrame:IsVisible() then
+    optionsFrame.InCombatAlphaLabel:SetText(string.format(L["In-Combat Alpha: %d%%"], optionsFrame.InCombatAlpha:GetValue() * 100))
+  end
+  GhostReconDB.Settings.InCombatAlpha = optionsFrame.InCombatAlpha:GetValue()
+  GhostRecon:RefreshSpells(GhostReconDB.Settings.BarUnit)
 end)
 optionsFrame.InCombatAlpha:SetScript("OnMouseWheel", function(self, delta)
-	local current = optionsFrame.InCombatAlpha:GetValue()
-	if (delta > 0) and (current < 1) then
-		optionsFrame.InCombatAlpha:SetValue(current + 0.01)
-	elseif (delta < 0) and (current > 0) then
-		optionsFrame.InCombatAlpha:SetValue(current - 0.01)
-	end
+  local current = optionsFrame.InCombatAlpha:GetValue()
+  if (delta > 0) and (current < 1) then
+    optionsFrame.InCombatAlpha:SetValue(current + 0.01)
+  elseif (delta < 0) and (current > 0) then
+    optionsFrame.InCombatAlpha:SetValue(current - 0.01)
+  end
 end)
 
 -- 'in of combat alpha' label
@@ -408,51 +409,81 @@ optionsFrame.LockedLabel:SetJustifyH("LEFT")
 optionsFrame.LockedLabel:SetTextColor(1, 1, 1)
 optionsFrame.LockedLabel:SetText(L["Locked"])
 optionsFrame.Locked:SetScript("OnClick", function()
-	GRAbilityDragBarToggle()
+  GRAbilityDragBarToggle()
 end)
 
 function GRAbilityDragBarToggle()
-	local cols = optionsFrame.Columns:GetValue()
-	local rows = math.ceil(18 / cols)
-	if abilityDragBar:IsVisible() then
-		abilityDragBar:Hide()
-		optionsFrame.Locked:SetChecked(true)
-	else
-		abilityDragBar:SetPoint(GhostReconDB.Settings.Anchor or "CENTER", UIParent, GhostReconDB.Settings.RelativeAnchor or "CENTER", GhostReconDB.Settings.X or 0, GhostReconDB.Settings.Y or 0)
-		abilityDragBar:SetWidth(cols * (optionsFrame.Scale:GetValue() * 32) + (cols - 1) * GhostRecon.CONST_PADDING)
-		abilityDragBar:SetHeight(rows * (optionsFrame.Scale:GetValue() * 32) + (rows - 1) * GhostRecon.CONST_PADDING)
-		abilityDragBar.texture:SetAllPoints(abilityDragBar)
-		abilityDragBar:Show()
-		optionsFrame.Locked:SetChecked(false)
-	end
+  local cols = optionsFrame.Columns:GetValue()
+  local rows = math.ceil(18 / cols)
+  if abilityDragBar:IsVisible() then
+    abilityDragBar:Hide()
+    optionsFrame.Locked:SetChecked(true)
+  else
+    abilityDragBar:SetPoint(
+      GhostReconDB.Settings.Anchor or "CENTER",
+      UIParent,
+      GhostReconDB.Settings.RelativeAnchor or "CENTER",
+      GhostReconDB.Settings.X or 0,
+      GhostReconDB.Settings.Y or 0
+    )
+    abilityDragBar:SetWidth(cols * (optionsFrame.Scale:GetValue() * 32) + (cols - 1) * GhostRecon.CONST_PADDING)
+    abilityDragBar:SetHeight(rows * (optionsFrame.Scale:GetValue() * 32) + (rows - 1) * GhostRecon.CONST_PADDING)
+    abilityDragBar.texture:SetAllPoints(abilityDragBar)
+    abilityDragBar:Show()
+    optionsFrame.Locked:SetChecked(false)
+  end
 end
 
 function GRScaleChange(delta)
-	local current = optionsFrame.Scale:GetValue()
-	if (delta > 0) and (current < 3) then
-		optionsFrame.Scale:SetValue(current + 0.01)
-	elseif (delta < 0) and (current > 0.5) then
-		optionsFrame.Scale:SetValue(current - 0.01)
-	end
+  local current = optionsFrame.Scale:GetValue()
+  if (delta > 0) and (current < 3) then
+    optionsFrame.Scale:SetValue(current + 0.01)
+  elseif (delta < 0) and (current > 0.5) then
+    optionsFrame.Scale:SetValue(current - 0.01)
+  end
 end
 
 -- tidy ups
 optionsFrame:Hide()
 
--- register the frame with WoW
+-- Register the frame with WoW and make it available to the slash command handler
 local category, _ = Settings.RegisterCanvasLayoutCategory(optionsFrame, optionsFrame.name)
 optionsFrame.settingsCategory = category
 Settings.RegisterAddOnCategory(category)
-
--- make the frame available to the slash command handler
 GhostRecon.optionsFrame = optionsFrame
 GhostRecon.abilityDragBar = abilityDragBar
 
-local function OnEvent(frame, event, whichAddon)
-	if event == "ADDON_LOADED" and whichAddon == "GhostRecon" then
-		ShowCurrentSettings()
-	end
+-- 整合所有斜杠命令注册
+SlashCmdList["GHOSTRECON"] = function()
+  Settings.OpenToCategory(optionsFrame.settingsCategory:GetID())
+end
+if GhostRecon.useDefaultSlash then
+  -- 没有聊天插件时使用默认命令
+  SLASH_GHOSTRECON1 = "/recon"
+  SLASH_GHOSTRECON2 = "/gr"
+else
+  -- 有聊天插件时使用扩展命令集
+  SLASH_GHOSTRECON1 = "/recon"
+  SLASH_GHOSTRECON2 = "/rc"
+  SLASH_GHOSTRECON3 = "/gr"
+  SLASH_GHOSTRECON4 = "/ghost"
 end
 
+SlashCmdList["GHOSTRECONSEARCH"] = function()
+  Settings.OpenToCategory(GhostRecon.browser.settingsCategory:GetID())
+end
+SLASH_GHOSTRECONSEARCH1 = "/grs"
+SLASH_GHOSTRECONSEARCH2 = "/rs"
+SLASH_GHOSTRECONSEARCH3 = "/gs"
+
+SlashCmdList["GHOSTRECONRELOADER"] = function()
+  ReloadUI()
+end
+SLASH_GHOSTRECONRELOADER1 = "/rl"
+
 optionsFrame:RegisterEvent("ADDON_LOADED")
-optionsFrame:SetScript("OnEvent", OnEvent)
+optionsFrame:SetScript("OnEvent", function(frame, event, whichAddon)
+  if event == "ADDON_LOADED" and whichAddon == "GhostRecon" then
+    ShowCurrentSettings()
+  end
+end)
